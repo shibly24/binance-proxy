@@ -1,19 +1,17 @@
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
 
-app.get("/getBinancePrice", async (req, res) => {
-  const { symbol } = req.query;
-  if (!symbol) return res.status(400).send({ error: "Missing symbol" });
-
+app.get('/price', async (req, res) => {
+  const symbol = req.query.symbol || 'BTCUSDT';
   try {
     const response = await axios.get(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`);
     res.json(response.data);
-  } catch (err) {
-    res.status(500).send({ error: "Binance API error", details: err.message });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch data from Binance' });
   }
 });
 
